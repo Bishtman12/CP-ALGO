@@ -1,0 +1,41 @@
+def create_sieve(n):
+    sieve = [0] * (n + 1)
+    for i in range(2, len(sieve)):
+        if sieve[i] == 0:  # not visited
+            sieve[i] = 1  # prime
+            j = i * i
+            while j < len(sieve):
+                sieve[j] = -1  # not prime
+                j += i
+    return sieve
+
+
+def get_prime(n):
+    sieve = create_sieve(n)
+    prime = []
+    for i in range(2, len(sieve)):
+        if sieve[i] == 1:
+            prime.append(i)
+    return prime
+
+
+# find all primes between l,r
+# find all primes till root(r) then mark using those prime in the range of l and r
+def solve(l, r):
+    primes = get_prime(int(r ** 0.5) + 1)
+    # creating an array of size l,r
+    A = [True] * (r - l + 1)
+    for i in primes:
+        first_multiple = (l // i) * i
+        if first_multiple < l:
+            first_multiple += i
+        j = max(first_multiple, i * i)
+        while j <= r:
+            A[j - l] = False
+            j += i
+    for i in range(len(A)):
+        if A[i] == True:
+            if l + i == 1:
+                continue
+            print(l + i, end=" ")
+solve(1, 5)
